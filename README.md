@@ -1,9 +1,8 @@
 # Rheo
 
-A personal finance tracker, built as one module per thing worth tracking — what you owe,
-what recurs, what you save, what you spend. Each module keeps its own rows and shows what
-is due, soon, or settled. Not every module is switched on; [Routes](#routes) is the list
-of what currently is.
+A personal organizer for money and time. It tracks what you owe, what recurs, what comes
+in and what you save, alongside your tasks and notes. A month calendar on the Dashboard
+pulls it all together, so you can see what is due, late or settled.
 
 The data lives in a Google Sheet. A Google Apps Script web app sits in front of it as a
 small JSON API, so there is no server to run or pay for — the frontend is a static site
@@ -67,7 +66,7 @@ never worth it. The cache is also written to `localStorage`, so reopening the ap
 paints immediately instead of waiting on a cold fetch.
 
 Because of that, an edit made **directly in the Google Sheet** can take a few
-minutes to appear. "Refresh data" in the sidebar fetches immediately.
+minutes to appear. "Refresh data" in the top bar fetches immediately.
 
 Both the query cache and the cached currency are keyed by user id, and a fresh
 `QueryClient` is built per signed-in user (`src/lib/queryClient.ts`,
@@ -95,26 +94,21 @@ The rule for anything added to `src/lib/optimistic.ts`: it must produce exactly
 what the backend would return for the same call. If predicting the result needs
 something only the server knows, the write waits instead.
 
-## Routes
+## Modules
 
-This section is the one place that says which modules are live. Keep it current here
-rather than in the intro, the sidebar, or the sign-in copy — none of those name a module,
-so switching one on is a change to this list and to `src/App.tsx`.
-
-**Registered:**
-
-| Module | Routes | What it tracks |
+| Module | Route | What it does |
 |---|---|---|
-| Debts | `/debts`, `/debts/:id` | Loans and credit cards, with a payment schedule or monthly statements |
-| Bills | `/bills`, `/bills/:id` | Recurring payments, generating one payable at a time on a schedule |
-| Settings | `/settings` | Currency, and signing out |
+| Dashboard | `/dashboard` | A month calendar of everything dated: bills, debt payments, income, savings movements and tasks. On a phone it switches to an agenda list. |
+| Tasks | `/tasks` | A board with columns you can rename and reorder, plus a Backlog of unscheduled tasks. Tasks can repeat daily, weekly or monthly: moving one into the done column creates the next occurrence. |
+| Notes | `/notes`, `/notes/:id` | Undated notes with a rich-text body and an optional checklist. Anything that needs a due date belongs in Tasks. |
+| Debts | `/debts`, `/debts/:id` | Loans with a fixed installment schedule, and credit cards with monthly statements. |
+| Bills | `/bills`, `/bills/:id` | Recurring bills, fixed or variable, due twice a month, monthly, quarterly or yearly. Each bill has one upcoming payable at a time, and paying it creates the next one. |
+| Income | `/income` | Money in, logged as entries against named sources. Sources can be archived without losing their history. |
+| Savings | `/savings` | A ledger of deposits and withdrawals. Paying a bill or debt can draw from it. The balance is always calculated from the entries, never stored. |
+| Settings | `/settings` | Currency (PHP or USD), and signing out. |
 
-**Not registered:** `Dashboard`, `Funds`, `Savings`, and `Expendable` still exist under
-`src/pages/` from an earlier, broader version of the app, but are deliberately unrouted —
-their sheets have no `user_id` column, so the backend does not serve their actions either.
-Switching one on means giving its sheet a `user_id` and scoping its handlers first.
-
-Unknown paths land on `/debts`.
+Unknown paths land on `/dashboard`. Every module's sheet is scoped by `user_id`, so each
+account sees only its own data.
 
 ## Notes
 
