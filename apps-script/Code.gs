@@ -1,4 +1,4 @@
-// Finance Tracker — Google Apps Script web app backend.
+// Rheo — Google Apps Script web app backend.
 // Bind this script to the Google Sheet that holds the data sheets, then
 // Deploy > New deployment > Web app (Execute as: Me, Access: Anyone).
 // Secrets are generated automatically on first use; nothing to paste here.

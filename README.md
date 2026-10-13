@@ -1,4 +1,4 @@
-# Finance Tracker
+# Rheo
 
 A personal finance tracker, built as one module per thing worth tracking — what you owe,
 what recurs, what you save, what you spend. Each module keeps its own rows and shows what

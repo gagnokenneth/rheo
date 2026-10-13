@@ -12,6 +12,8 @@
  * what it receives, so a leaked spreadsheet yields nothing directly usable.
  */
 const ITERATIONS = 210_000
+// Predates the rename to Rheo. Part of every user's salt, so changing it locks
+// out every existing account.
 const SITE = 'finance-tracker:'
 
 export const MIN_PASSWORD_LENGTH = 10
