@@ -67,9 +67,9 @@ export function SignIn() {
           ))}
         </div>
 
-        <h1 className="mt-6 text-3xl font-bold tracking-tight text-black uppercase">Finance Tracker</h1>
+        <h1 className="mt-6 text-3xl font-bold tracking-tight text-black uppercase">Rheo</h1>
         <p className="mt-2 font-mono text-xs text-neutral-500">
-          {creating ? 'Create an account to start tracking your money.' : 'Keep track of where your money stands.'}
+          {creating ? 'Create an account to start organizing your money and time.' : 'Your money and time, in one place.'}
         </p>
 
         <form onSubmit={submit} className="mt-8 flex flex-col gap-5">

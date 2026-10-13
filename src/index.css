@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
- * Design tokens for the finance tracker.
+ * Design tokens for Rheo.
  *
  * The app is ~80% figures, so the numerals carry the personality: Space
  * Mono for every amount, date and count, IBM Plex Sans for everything else.
