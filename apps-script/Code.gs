@@ -518,7 +518,7 @@ function coerce(name, r) {
     id: num(r.id), name: String(r.name), sort_order: num(r.sort_order), is_done: bool(r.is_done)
   };
   if (name === 'notes') return {
-    id: num(r.id), title: String(r.title), body: optStr(r.body)
+    id: num(r.id), title: optStr(r.title), body: optStr(r.body)
   };
   if (name === 'note_items') return {
     id: num(r.id), note_id: num(r.note_id), text: String(r.text), done: bool(r.done),
@@ -1796,11 +1796,10 @@ function updateTaskColumn(p, uid) {
 
 function addNote(p, uid) {
   var input = p.input || {};
-  if (blank(input.title)) throw new Error('A note needs a title');
   appendRow('notes', {
     id: nextId('notes'),
     user_id: uid,
-    title: input.title,
+    title: input.title || '',
     body: input.body || ''
   });
   return null;
@@ -1810,10 +1809,7 @@ function updateNote(p, uid) {
   var rowIndex = ownedRowIndex('notes', p.id, uid);
   var given = p.patch || {};
   var patch = {};
-  if (Object.prototype.hasOwnProperty.call(given, 'title')) {
-    if (blank(given.title)) throw new Error('A note needs a title');
-    patch.title = given.title;
-  }
+  if (Object.prototype.hasOwnProperty.call(given, 'title')) patch.title = given.title || '';
   if (Object.prototype.hasOwnProperty.call(given, 'body')) patch.body = given.body;
   return patchRowAt('notes', rowIndex, patch);
 }

@@ -6,10 +6,15 @@ import type { KeyboardEvent } from 'react'
  * blur or Enter saves (skipped if the draft is empty or unchanged), Escape
  * cancels without saving — and only the rename: it is marked handled, so a
  * modal around the input (useEscape) stays open. Used by NoteDetail (note
- * title), TaskColumnLane (column name) and ManageSourcesModal (a source) —
- * each renders its own markup; this hook owns the state and the rules.
+ * title — its input is always shown, editing from focus, and may be emptied),
+ * TaskColumnLane (column name) and ManageSourcesModal (a source) — each
+ * renders its own markup; this hook owns the state and the rules.
  */
-export function useInlineRename(currentValue: string, onSave: (trimmed: string) => void) {
+export function useInlineRename(
+  currentValue: string,
+  onSave: (trimmed: string) => void,
+  { allowEmpty = false }: { allowEmpty?: boolean } = {},
+) {
   const [renaming, setRenaming] = useState(false)
   const [draft, setDraft] = useState('')
 
@@ -19,9 +24,12 @@ export function useInlineRename(currentValue: string, onSave: (trimmed: string) 
   }
 
   const save = () => {
+    // Not renaming means Escape already cancelled — the blur that follows
+    // must not save the abandoned draft.
+    if (!renaming) return
     setRenaming(false)
     const trimmed = draft.trim()
-    if (trimmed && trimmed !== currentValue) onSave(trimmed)
+    if ((trimmed || allowEmpty) && trimmed !== currentValue) onSave(trimmed)
   }
 
   const cancel = () => setRenaming(false)

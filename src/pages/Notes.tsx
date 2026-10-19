@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useFinanceData } from '../hooks/useFinanceData.ts'
 import { groupItemsByNote, doneCount, bodyPreview } from '../lib/notes.ts'
 import { isTemp } from '../lib/tempId.ts'
@@ -6,11 +6,10 @@ import { PendingBadge } from '../components/PendingBadge.tsx'
 import { BrutalButton, BrutalCardRow, BrutalEmptyState, BrutalPageHeader } from '../components/brutal.tsx'
 import { LoadError } from '../components/LoadError.tsx'
 import { LoadingScreen } from '../components/LoadingScreen.tsx'
-import { AddNoteModal } from './notes/AddNoteModal.tsx'
 
 export function Notes() {
   const { data, isPending, isError, error } = useFinanceData()
-  const [adding, setAdding] = useState(false)
+  const navigate = useNavigate()
 
   if (isPending) return <LoadingScreen />
   if (isError || !data) return <LoadError error={error} />
@@ -22,7 +21,7 @@ export function Notes() {
       <BrutalPageHeader
         title="Notes"
         action={
-          <BrutalButton type="button" onClick={() => setAdding(true)}>
+          <BrutalButton type="button" onClick={() => void navigate('/notes/new')}>
             + Add note
           </BrutalButton>
         }
@@ -46,7 +45,7 @@ export function Notes() {
                 className="flex items-center justify-between gap-4 px-5 py-6"
               >
                 <div className="min-w-0 space-y-1">
-                  <p className="truncate text-base font-bold tracking-tight text-black">{note.title}</p>
+                  {note.title && <p className="truncate text-base font-bold tracking-tight text-black">{note.title}</p>}
                   {summary && <p className="truncate font-mono text-xs text-neutral-500">{summary}</p>}
                 </div>
                 {pending ? <PendingBadge /> : <span aria-hidden className="font-mono text-xs text-neutral-500">→</span>}
@@ -55,8 +54,6 @@ export function Notes() {
           })}
         </div>
       )}
-
-      {adding && <AddNoteModal open onClose={() => setAdding(false)} />}
     </div>
   )
 }

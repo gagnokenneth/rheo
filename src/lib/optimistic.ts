@@ -602,7 +602,7 @@ export function applyTaskColumnPatch(
 
 /** See NotePatch — the wire's null becomes the model's undefined. */
 function clearedNoteFields(patch: NotePatch): Partial<Note> {
-  return clearNulls(patch, ['body']) as Partial<Note>
+  return clearNulls(patch, ['title', 'body']) as Partial<Note>
 }
 
 export function addNoteTo(data: FinanceData, vars: NewNote): FinanceData {

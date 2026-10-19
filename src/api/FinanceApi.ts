@@ -122,7 +122,7 @@ export interface MoveTaskInput {
 export type TaskColumnPatch = Patch<Pick<TaskColumn, 'name' | 'sort_order'>>
 
 export type NewNote = Omit<Note, 'id'>
-export type NotePatch = Patch<Omit<Note, 'id'>, 'body'>
+export type NotePatch = Patch<Omit<Note, 'id'>, 'title' | 'body'>
 
 export type NewNoteItem = Omit<NoteItem, 'id' | 'note_id' | 'done' | 'sort_order'>
 /** Neither field is ever cleared to null — text is always required,

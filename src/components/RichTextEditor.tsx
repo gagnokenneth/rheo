@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import type { Editor } from '@tiptap/react'
@@ -42,7 +42,9 @@ export function RichTextEditor({
     extensions: [StarterKit],
     content: value,
     autofocus: autoFocus ? 'end' : false,
-    onBlur: ({ editor }) => onChange(editor.getHTML()),
+    // An emptied editor still holds "<p></p>"; report it as '' so callers'
+    // "empty means cleared" checks work without parsing HTML.
+    onBlur: ({ editor }) => onChange(editor.isEmpty ? '' : editor.getHTML()),
   })
 
   // Re-seed the editor when `value` changes out from under it (a query
@@ -52,6 +54,21 @@ export function RichTextEditor({
   useEffect(() => {
     if (editor && value !== editor.getHTML()) editor.commands.setContent(value)
   }, [editor, value])
+
+  // Leaving without a blur (the browser's Back, a swipe) would drop unsaved
+  // text, so unmount hands over anything not yet reported. Refs, refreshed
+  // each render, give the cleanup the current value and callback.
+  const latest = useRef({ value, onChange })
+  useEffect(() => {
+    latest.current = { value, onChange }
+  })
+  useEffect(() => {
+    if (!editor) return
+    return () => {
+      const html = editor.isEmpty ? '' : editor.getHTML()
+      if (html !== latest.current.value) latest.current.onChange(html)
+    }
+  }, [editor])
 
   if (!editor) return null
 

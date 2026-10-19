@@ -1055,7 +1055,6 @@ export class MockApi implements FinanceApi {
 
   async addNote(input: NewNote): Promise<FinanceData> {
     const data = this.load()
-    if (!input.title.trim()) throw new Error('A note needs a title')
     const note: Note = {
       id: nextId(data.notes),
       ...input,
@@ -1068,11 +1067,9 @@ export class MockApi implements FinanceApi {
   async updateNote(id: number, patch: NotePatch): Promise<FinanceData> {
     const data = this.load()
     const note = this.ownedNote(data, id)
-    if (Object.prototype.hasOwnProperty.call(patch, 'title') && !(patch.title ?? '').trim()) {
-      throw new Error('A note needs a title')
-    }
     Object.assign(note, patch)
     // null is the wire's "clear this"; the stored model uses undefined.
+    if (patch.title === null) note.title = undefined
     if (patch.body === null) note.body = undefined
     this.save(data)
     return this.delay(data)

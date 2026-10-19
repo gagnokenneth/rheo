@@ -170,7 +170,7 @@ export interface Task {
 }
 
 /**
- * A note: a title plus an optional WYSIWYG body, and optionally a checklist
+ * A note: an optional title plus an optional WYSIWYG body, and optionally a checklist
  * (its items live in NoteItem — present only once "Add checklist" has been
  * used on this note). Deliberately dateless — the moment something needs a
  * due date it is a Task, not a Note (see the design spec's Notes/Task
@@ -178,7 +178,8 @@ export interface Task {
  */
 export interface Note {
   id: number
-  title: string
+  /** Optional — a note can be just a body or just a checklist. */
+  title?: string
   /** HTML from the WYSIWYG editor. */
   body?: string
 }
